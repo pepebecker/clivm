@@ -1,0 +1,38 @@
+{
+  "name": "clivm",
+  "version": "1.0.0",
+  "description": "Switch between different versions of command line tools installed on your system.",
+  "main": "index.js",
+  "files": [
+    "install.js"
+  ],
+  "bin": {
+    "clivm": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "install": "node install.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pepebecker/clivm.git"
+  },
+  "keywords": [
+    "cli",
+    "version",
+    "manager",
+    "command",
+    "line",
+    "tool"
+  ],
+  "author": "Pepe Becker <mail@pepebecker.com> (http://pepebecker.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pepebecker/clivm/issues"
+  },
+  "homepage": "https://github.com/pepebecker/clivm#readme",
+  "dependencies": {
+    "cli-autocomplete": "^0.4.0",
+    "json-fs-store": "^1.0.1"
+  }
+}
