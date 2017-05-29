@@ -1,6 +1,6 @@
 {
   "name": "clivm",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Switch between different versions of command line tools installed on your system.",
   "main": "index.js",
   "files": [
