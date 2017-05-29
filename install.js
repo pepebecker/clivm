@@ -24,7 +24,6 @@ const patch = (patch, profile) => {
 			console.log(`${profile} sucessfully patched.`)
 		})
 	})
-	exec('source ' + profile)
 }
 
 const patchBash = () => {
