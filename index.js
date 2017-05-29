@@ -6,6 +6,7 @@ const autocompletePrompt = require('cli-autocomplete')
 const exec = require('child_process').exec
 const jsonStore = require('json-fs-store')
 const homedir = require('os').homedir()
+const chalk = require('chalk')
 const path = require('path')
 const fs = require('fs')
 
@@ -16,7 +17,7 @@ const clivmData = path.join(clivmHome, 'data')
 const store = jsonStore(clivmData)
 
 const noEntriesFound = (cliname) => {
-	console.log(`\nNo entries found${cliname ? ' for ' + cliname : ''}\n`)
+	console.log(`\nNo entries found${cliname ? ' for ' + chalk.bold(cliname) : ''}\n`)
 	process.exit(1)
 }
 
@@ -29,7 +30,7 @@ const list = (cliname) => {
 		for (let cli of objects) {
 			if (cliname === cli.id || cliname === 'all') {
 				entryFound = true
-				console.log(cli.id)
+				console.log(chalk.blue(cli.id))
 				cli.versions.forEach(function(version, index) {
 					if (cli.version == index) {
 						console.log(' ▸ ' + (index + 1) + ': ' + version)
@@ -56,19 +57,19 @@ const change = (cliname, callback) => {
 	store.load(cliname, (err, object) => {
 		if (err) noEntriesFound(cliname)
 
-		const suggestVersions = (input) => Promise.resolve(
-			object.versions.filter((cli, i) => cli.slice(0, input.length) === input)
-			.map((cli) => ({title: cli, value: cli}))
-		)
+		const suggestVersions = (input) => {
+			const versions = object.versions.filter(cli => cli.slice(0, input.length) === input)
+			return Promise.resolve(versions.map(cli => ({title: cli, value: cli})))
+		}
 
-		autocompletePrompt(`To which ${cliname} version do you want to switch?`, suggestVersions, {cursor: object.version})
+		autocompletePrompt(`To which ${chalk.bold(cliname)} version do you want to switch?`, suggestVersions, {cursor: object.version})
 		.on('submit', (version) => {
 			const index = object.versions.indexOf(version)
 			if (index >= 0) {
 				object.version = index
 				update(object, () => {
 					createSimlink(version, cliname)
-					console.log(`\nSuccessfully switched ${cliname} to version ${version}\n`)
+					console.log(`\nSuccessfully switched ${chalk.bold(cliname)} to version ${chalk.bold(version)}\n`)
 					callback && callback()
 				})
 			} else {
@@ -94,15 +95,11 @@ const add = (version) => {
 
 		const clis = objects.map((cli) => cli.id)
 
-		const suggestCLIs = (input) => Promise.resolve(
-			clis.concat(input).filter((cli, i) => {
-				if (cli === input) {
-					return clis.indexOf(cli) !== i
-				} else {
-					return cli.slice(0, input.length) === input
-				}
-			}).map((cli) => ({title: cli, value: cli}))
-		)
+		const suggestCLIs = (input) => {
+			const results = clis.filter((cli) => cli.slice(0, input.length) === input)
+			if (!results.includes(input)) results.push(input)
+			return Promise.resolve(results.map((title) => ({title, value: title})))
+		}
 
 		autocompletePrompt('To which CLI do you want to add this version?', suggestCLIs)
 		.on('submit', (cliname) => {
@@ -110,7 +107,7 @@ const add = (version) => {
 			if (index >= 0) {
 				objects[index].versions.push(version)
 				update(objects[index], () => {
-					console.log(`\nAdded ${version} to ${cliname}\n`)
+					console.log(`\nAdded ${chalk.bold(version)} to ${chalk.bold(cliname)}\n`)
 				})
 			} else {
 				const cli = {'id': cliname, 'version': 0, 'versions': [version]}
@@ -118,7 +115,7 @@ const add = (version) => {
 					if (err) throw err
 
 					createSimlink(version, cliname)
-					console.log(`\nCreated ${cliname} with version ${version}\n`)
+					console.log(`\nCreated ${chalk.bold(cliname)} with version ${chalk.bold(version)}\n`)
 				})
 			}
 		})
@@ -134,14 +131,14 @@ const remove = (cliname, callback) => {
 				if (err) throw err
 
 				removeSimlink(cliname)
-				console.log(`\nSuccessfully removed ${cliname} from CLI Version Manager\n`)
+				console.log(`\nSuccessfully removed ${chalk.bold(cliname)} from CLI Version Manager\n`)
 				callback && callback()
 			})
 		} else {
-			const suggestVersions = (input) => Promise.resolve(
-				object.versions.filter((cli, i) => cli.slice(0, input.length) === input)
-				.map((cli) => ({title: cli, value: cli}))
-			)
+			const suggestVersions = (input) => {
+				const versions = object.versions.filter(cli => cli.slice(0, input.length) === input)
+				return Promise.resolve(versions.map(cli => ({title: cli, value: cli})))
+			}
 
 			autocompletePrompt('Which version do you want to remove?', suggestVersions)
 			.on('submit', (version) => {
@@ -149,12 +146,12 @@ const remove = (cliname, callback) => {
 				if (index >= 0) {
 					object.versions.splice(index, 1)
 
-					console.log(`\nSuccessfully removed ${version} from ${cliname}`)
+					console.log(`\nSuccessfully removed ${chalk.bold(version)} from ${chalk.bold(cliname)}`)
 
 					if (object.version == index) {
 						object.version = 0
 						createSimlink(object.versions[0], cliname)
-						console.log(`Switched ${cliname} from ${version} to ${object.versions[0]}`)
+						console.log(`Switched ${cliname} from ${chalk.bold(version)} to ${chalk.bold(object.versions[0])}`)
 					}
 
 					update(object, () => {
