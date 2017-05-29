@@ -1,6 +1,7 @@
 'use strict'
 
 const homedir = require('os').homedir()
+const exec = require('child_process').exec
 const path = require('path')
 const fs = require('fs')
 
@@ -26,13 +27,13 @@ const patch = (patch, profile) => {
 }
 
 const patchBash = () => {
-	const patchData = `\n# CLI Version Manager\nexport PATH=${clivmBin}:$PATH\n\n`
+	const patchData = `\n# CLI Version Manager\nexport PATH=${clivmBin}:$PATH\n`
 	const profilePath = path.join(homedir, '.bash_profile')
 	patch(patchData, profilePath)
 }
 
 const patchFish = () => {
-	const patchData = `\n# CLI Version Manager\nset -gx PATH ${clivmBin} $PATH\n\n`
+	const patchData = `\n# CLI Version Manager\nset -gx PATH ${clivmBin} $PATH\n`
 	const profilePath = path.join(homedir, '.config/fish/config.fish')
 	patch(patchData, profilePath)
 }
