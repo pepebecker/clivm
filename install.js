@@ -26,16 +26,18 @@ const patch = (patch, profile) => {
 }
 
 const patchBash = () => {
-	const patchData = `\n# CLI Version Manager\nexport PATH=${clivmBin}:$PATH\n`
+	const patchData = `\n# CLI Version Manager\nexport PATH=${clivmBin}:$PATH\n\n`
 	const profilePath = path.join(homedir, '.bash_profile')
 	patch(patchData, profilePath)
 }
 
 const patchFish = () => {
-	const patchData = `\n# CLI Version Manager\nset -gx PATH ${clivmBin} $PATH\n`
+	const patchData = `\n# CLI Version Manager\nset -gx PATH ${clivmBin} $PATH\n\n`
 	const profilePath = path.join(homedir, '.config/fish/config.fish')
 	patch(patchData, profilePath)
 }
+
+exec('mkdir -p ' + clivmBin)
 
 patchBash()
 patchFish()
