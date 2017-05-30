@@ -7,10 +7,12 @@
     "install.js"
   ],
   "bin": {
-    "clivm": "./index.js"
+    "clivm": "./index.js",
+    "clivm-setup": "./setup.js"
   },
   "scripts": {
     "start": "node index.js",
+    "setup": "node setup.js",
     "install": "node install.js"
   },
   "repository": {
@@ -33,7 +35,14 @@
   "homepage": "https://github.com/pepebecker/clivm#readme",
   "dependencies": {
     "chalk": "^1.1.3",
-    "cli-autocomplete": "^0.4.0",
-    "json-fs-store": "^1.0.1"
+    "cli-autocomplete": "^0.4.1",
+    "env-paths": "^1.0.0",
+    "figures": "^2.0.0",
+    "json-fs-store": "^1.0.1",
+    "mkdirp": "^0.5.1",
+    "multiselect-prompt": "^0.3.1",
+    "mz": "^2.6.0",
+    "shells": "^2.0.0",
+    "thenify": "^3.3.0"
   }
 }
