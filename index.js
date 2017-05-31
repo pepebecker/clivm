@@ -87,6 +87,8 @@ const list = so(function* (cliname) {
 			process.stdout.write('No entries found for ' + cliname + '\n')
 		}
 	}
+
+	process.stdout.write('\n')
 })
 
 const change = so(function* (cliname) {
