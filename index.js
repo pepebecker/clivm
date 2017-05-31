@@ -82,9 +82,9 @@ const list = so(function* (cliname) {
 
 	if (!entryFound) {
 		if (cliname === 'all') {
-			process.stdout.write('No entries found')
+			process.stdout.write('No entries found\n')
 		} else {
-			process.stdout.write('No entries found for ' + cliname)
+			process.stdout.write('No entries found for ' + cliname + '\n')
 		}
 	}
 })
