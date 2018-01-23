@@ -1,4 +1,6 @@
 # CLI Version Manager
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/pepebecker/clivm.svg)](https://greenkeeper.io/)
 Switch between different versions of command line tools installed on your system.
 
 [![npm version](https://img.shields.io/npm/v/clivm.svg)](https://www.npmjs.com/package/clivm)
